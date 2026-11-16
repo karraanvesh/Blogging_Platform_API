@@ -1,5 +1,6 @@
 const express = require('express'); // requiring the express module , it returns a function 
-const { serverConfig } = require('./config/server.config');
+const { serverConfig } = require('./config/server.config.js');
+const { blogRouter } = require('./routers/v1/blog.router.js');
 
 // express is a function , calling this function will create a new app / server instance or object
 const app = express();
@@ -16,17 +17,12 @@ const PORT = serverConfig.PORT; // PORT at which our express server has to start
  * res.send() can be used to send the response to the corresponding request.
  * 
  */
-app.get('/' , (req , res) => {
-    res.send(`Hello , World`);
-});
 
-app.post('/' , (req , res) => {
-    res.send(`Hello , World ! POST`);
-});
+// TODO : why we need to manually , specify express.json() in express server object to parse the req 
+// body which is being sent as a json
+app.use(express.json());
 
-app.delete('/' , (req , res) => {
-    res.send(`Hello , World ! DELETE`);
-});
+app.use('/api/v1' , blogRouter);
 
 /**
  * Using the express server object , we are configuring the PORT at which our express server 
