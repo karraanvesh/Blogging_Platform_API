@@ -15,6 +15,20 @@ async function createBlogHandler(req , res) {
 async function getBlogHandler(req , res) {
     // TODO : revise these request query params  
     // also read about query and other params and how to use them
+    /**
+     * url params are special .
+     * 
+     * Query params can be easily distinguished since everything after the ? in the request url are the query params.
+     * But in order to identify the url params we need manually tell to the express that this integral part is the 
+     * url param.
+     * 
+     * i.e., /:{name_of_the_url_param} , But default the value is treated as a string and everything before and after this 
+     * integral part is a string.
+     * 
+     * Based on our usecase we can manually convert this string value to any other value.
+     * 
+     * url params can be accessed using req.params
+     */
     console.log(req.params);
 
     const blog = await getBlogService(Number(req.params.id));

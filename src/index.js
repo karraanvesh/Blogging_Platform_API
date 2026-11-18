@@ -7,21 +7,28 @@ const app = express();
 
 const PORT = serverConfig.PORT; // PORT at which our express server has to start
 
-/**
- * Express server object gets access to the all the http methods like get , post , delete , Patch etc.
- * Each http function has two parameters 
- * 
- * 1. url
- * 2. callback which has the access to the req and res objects.
- * 
- * res.send() can be used to send the response to the corresponding request.
- * 
- */
-
 // TODO : why we need to manually , specify express.json() in express server object to parse the req 
 // body which is being sent as a json
+/**
+ * Query and url params are going to be sent in the request url , so we don't need any extra 
+ * processing to access them in the express.
+ * 
+ * But request body is not sent in the request but can be accessed using req.body property.
+ * And request body can be anything text , json , html , xml , js etc. Since the data which
+ * can be sent from the client can be anything we need to manually tell the express js that 
+ * we are going to receive certain type data from the client , so please parse it .
+ * 
+ * express does serialization and deserialization i.e., the data sent from the client is
+ * converted into some simpler format and then once received at the receivers end it can 
+ * be deserialized to get the actual data.
+ * 
+ * Then , the express js understands it and parses the corresponding data from the req body.
+ */
 app.use(express.json());
 
+/**
+ * Registering all the routers and their corresponding routes with out app server object.
+ */
 app.use('/api/v1' , blogRouter);
 
 /**
