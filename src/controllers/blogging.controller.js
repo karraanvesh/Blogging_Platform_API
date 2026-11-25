@@ -1,9 +1,9 @@
 const { createBlogService, getBlogService, updateBlogService, deleteBlogService } = require("../services/blogging.service.js");
 
 async function createBlogHandler(req , res) {
-    const blogResponse = await createBlogService();
+    const blogResponse = await createBlogService(req.body);
 
-    console.log(req.body);
+    // console.log("request body is : \n " , req.body);
 
     res.status(201).json({
         message: "Blog created successfully",
@@ -12,13 +12,13 @@ async function createBlogHandler(req , res) {
     });
 }
 
-async function getBlogHandler(req , res) {
+async function getBlogGyIdHandler(req , res) {
     console.log(req.params);
 
     const blog = await getBlogService(Number(req.params.id));
 
     res.status(200).json({
-        message: "Blog retrieved successfully",
+        message: "Blog found successfully",
         data: blog,
         success: true,
     })
@@ -52,7 +52,7 @@ async function deleteBlogHandler(req , res) {
 
 module.exports = {
     createBlogHandler,
-    getBlogHandler,
+    getBlogGyIdHandler,
     deleteBlogHandler,
     updateBlogHandler
 };

@@ -1,20 +1,35 @@
-async function createBlogRepository() {
-    try {
-        const newBlog = `Blog created successfully`;
+const Blog = require("../db/models/blog.js")
 
-        return newBlog;
+async function createBlog(blogData) {
+    try {
+        const blog = await Blog.create({
+            title    : blogData.title,
+            content  : blogData.content,
+            category : blogData.category,
+            tags     : {
+                tagNames : blogData.tags
+            }
+        });
+
+        console.log(`Blog created : ` , blog);
+
+        return blog;
     } catch (error) {
-        console.log(error);
+        throw new Error("From repository layer : " , error.message);
     }
 }
 
-async function getBlogRepository(blogId) {
+async function getBlogById(id) {
     try {
-        const blog = `Blog with id : ${blogId} has been retreived successfully`;
+        const blog = await Blog.findByPk(id);
 
-        console.log("In get blogger repo");
-
-        return blog;
+        if(!blog) {
+            console.log(`Blog not found: ${id}`);
+            throw new Error("NotFoundError : " , error.message);
+        } else {
+            console.log(`Blog found : ${blog.id}`);
+            return blog;
+        }
     } catch (error) {
         console.log(error);
     }
@@ -42,8 +57,8 @@ async function deleteBlogRepository(blogId) {
 }
 
 module.exports = {
-    createBlogRepository,
-    getBlogRepository,
+    createBlog,
+    getBlogById,
     updateBlogRepository,
     deleteBlogRepository
 };
