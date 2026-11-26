@@ -13,6 +13,8 @@ async function createBlog(blogData) {
 
         console.log(`Blog created : ` , blog);
 
+        blog.tags = blog.dataValues.tags.tagNames;
+
         return blog;
     } catch (error) {
         throw new Error("From repository layer : " , error.message);
@@ -28,6 +30,9 @@ async function getBlogById(id) {
             throw new Error("NotFoundError : " , error.message);
         } else {
             console.log(`Blog found : ${blog.id}`);
+
+            blog.tags = blog.dataValues.tags.tagNames;
+
             return blog;
         }
     } catch (error) {
@@ -35,9 +40,42 @@ async function getBlogById(id) {
     }
 }
 
-async function updateBlogRepository(blogId) {
+async function getAllBlogs() {
     try {
-        const blog = `Blog with id : ${blogId} has been updated successfully`;
+        const blogs = await Blog.findAll();
+
+        if(!blogs) {
+            throw new Error("NotFoundError");
+        }
+
+        const noOfBlogs = blogs.length;
+
+        for(let i = 0 ; i < noOfBlogs ; i++) {
+            const currentBlog = blogs[i];
+
+            currentBlog.tags = currentBlog.dataValues.tags.tagNames;
+        }
+
+        return blogs;
+    } catch (error) {
+        console.log("error in reposiotiory layer " , error);
+    }
+}
+
+async function updateBlog(id , updatedContent) {
+    try {
+        const blog = await Blog.findByPk(id);
+
+        if(!blog) {
+            console.log(`Blog not found with id : ${id}`);
+            throw new Error("NotFoundError");
+        }
+
+        blog.content = updatedContent;
+
+        await blog.save();
+
+        blog.tags = blog.dataValues.tags.tagNames;
 
         return blog;
     } catch (error) {
@@ -59,6 +97,7 @@ async function deleteBlogRepository(blogId) {
 module.exports = {
     createBlog,
     getBlogById,
-    updateBlogRepository,
+    getAllBlogs,
+    updateBlog,
     deleteBlogRepository
 };
