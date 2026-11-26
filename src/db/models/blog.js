@@ -34,6 +34,10 @@ Blog.init({
     updatedAt: {
         type: DataTypes.DATE,
         defaultValue: new Date(),
+    },
+    deletedAt: {
+        type: DataTypes.DATE,
+        defaultValue: null,
     }
 } , {
     tableName   : "blogs",

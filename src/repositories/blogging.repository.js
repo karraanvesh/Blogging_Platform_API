@@ -13,7 +13,7 @@ async function createBlog(blogData) {
 
         console.log(`Blog created : ` , blog);
 
-        blog.tags = blog.dataValues.tags.tagNames;
+        blog.tags = blog.tags.tagNames;
 
         return blog;
     } catch (error) {
@@ -23,7 +23,11 @@ async function createBlog(blogData) {
 
 async function getBlogById(id) {
     try {
-        const blog = await Blog.findByPk(id);
+        const blog = await Blog.findByPk(id , {
+            where : {
+                deletedAt : null
+            }
+        });
 
         if(!blog) {
             console.log(`Blog not found: ${id}`);
@@ -31,7 +35,7 @@ async function getBlogById(id) {
         } else {
             console.log(`Blog found : ${blog.id}`);
 
-            blog.tags = blog.dataValues.tags.tagNames;
+            blog.tags = blog.tags.tagNames;
 
             return blog;
         }
@@ -42,7 +46,11 @@ async function getBlogById(id) {
 
 async function getAllBlogs() {
     try {
-        const blogs = await Blog.findAll();
+        const blogs = await Blog.findAll({
+            where : {
+                deletedAt : null
+            }
+        });
 
         if(!blogs) {
             throw new Error("NotFoundError");
@@ -53,7 +61,7 @@ async function getAllBlogs() {
         for(let i = 0 ; i < noOfBlogs ; i++) {
             const currentBlog = blogs[i];
 
-            currentBlog.tags = currentBlog.dataValues.tags.tagNames;
+            currentBlog.tags = currentBlog.tags.tagNames;
         }
 
         return blogs;
@@ -75,7 +83,7 @@ async function updateBlog(id , updatedContent) {
 
         await blog.save();
 
-        blog.tags = blog.dataValues.tags.tagNames;
+        blog.tags = blog.tags.tagNames;
 
         return blog;
     } catch (error) {
@@ -83,12 +91,24 @@ async function updateBlog(id , updatedContent) {
     }
 }
 
-async function deleteBlogRepository(blogId) {
+async function deleteBlog(id) {
     try {
+        const blog = await Blog.findByPk(id);
 
-        const result = `Blog with id : ${blogId} has been deleted successfully`;
+        let isDeleted = false;
 
-        return result;
+        if(!blog) {
+            console.log(`Blog not found for id : ${id}`);
+            throw new Error("NotFoundError");
+        }
+
+        blog.deletedAt = new Date();
+
+        await blog.save();
+
+        isDeleted = true;
+
+        return true;        
     } catch (error) {
         console.log(error);
     }
@@ -99,5 +119,5 @@ module.exports = {
     getBlogById,
     getAllBlogs,
     updateBlog,
-    deleteBlogRepository
+    deleteBlog
 };

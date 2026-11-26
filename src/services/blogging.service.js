@@ -1,4 +1,4 @@
-const { createBlog, getBlogById, updateBlog, deleteBlogRepository, getAllBlogs } = require("../repositories/blogging.repository.js");
+const { createBlog, getBlogById, updateBlog, deleteBlog, getAllBlogs } = require("../repositories/blogging.repository.js");
 
 async function createBlogService(blogData) {
     try {
@@ -41,10 +41,10 @@ async function updateBlogService(id , updatedContent) {
     }
 }
 
-async function deleteBlogService(blogId) {
+async function deleteBlogService(id) {
     try {
 
-        const result = await deleteBlogRepository(blogId);
+        const result = await deleteBlog(id);
 
         return result;
     } catch (error) {

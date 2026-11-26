@@ -8,7 +8,7 @@ blogRouter.get('/:id' , getBlogGyIdHandler);
 
 blogRouter.get('' , getAllBlogsHandler);
 
-blogRouter.post('/posts' , createBlogHandler);
+blogRouter.post('/posts' ,createBlogHandler);
 
 blogRouter.patch('/posts/:id' , updateBlogHandler);
 

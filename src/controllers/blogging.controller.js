@@ -1,13 +1,23 @@
+const validateRequestBody = require("../middlewares/validateCreateBlog.js");
 const { createBlogService, getBlogService, updateBlogService, deleteBlogService, getAllBlogsService } = require("../services/blogging.service.js");
 
 async function createBlogHandler(req , res) {
-    const blogResponse = await createBlogService(req.body);
 
-    res.status(201).json({
-        message: "Blog created successfully",
-        data: blogResponse,
-        success: true,
-    });
+    if(!validateRequestBody(req.body)) {
+        res.status(400).json({
+            message: "Request body does not contain all the required fields",
+            data : null,
+            success: false,
+        });
+    } else {
+        const blogResponse = await createBlogService(req.body);
+
+        res.status(201).json({
+            message: "Blog created successfully",
+            data: blogResponse,
+            success: true,
+        });
+    }
 }
 
 async function getBlogGyIdHandler(req , res) {
@@ -45,12 +55,10 @@ async function updateBlogHandler(req , res) {
 
 async function deleteBlogHandler(req , res) {
 
-    console.log(req.params);
-
     const result = await deleteBlogService(Number(req.params.id));
 
     res.status(204).json({
-        message: "Blog created successfully",
+        message: "Blog deleted successfully",
         data : result,
         success: true,
     })
@@ -61,5 +69,5 @@ module.exports = {
     getBlogGyIdHandler,
     getAllBlogsHandler,
     deleteBlogHandler,
-    updateBlogHandler
+    updateBlogHandler,
 };
