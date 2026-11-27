@@ -1,4 +1,4 @@
-const { createBlog, getBlogById, updateBlog, deleteBlog, getAllBlogs } = require("../repositories/blogging.repository.js");
+const { createBlog, getBlogById, updateBlog, deleteBlog, getAllBlogs, getBlogsByFilter } = require("../repositories/blogging.repository.js");
 
 async function createBlogService(blogData) {
     try {
@@ -52,10 +52,21 @@ async function deleteBlogService(id) {
     }
 }
 
+async function getBlogsByFilterService(filter) {
+    try {
+        const blogs = await getBlogsByFilter(filter);
+
+        return blogs;
+    } catch (error) {
+        console.log(error); 
+    }
+}
+
 module.exports = {
     createBlogService,
     getBlogService,
     getAllBlogsService,
     updateBlogService,
-    deleteBlogService
+    deleteBlogService,
+    getBlogsByFilterService
 };

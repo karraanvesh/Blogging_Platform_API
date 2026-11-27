@@ -1,10 +1,11 @@
 const express = require("express");
-const { createBlogHandler, updateBlogHandler, deleteBlogHandler, getBlogGyIdHandler, getAllBlogsHandler } = require("../../controllers/blogging.controller.js");
+const { createBlogHandler, updateBlogHandler, deleteBlogHandler, getBlogGyIdHandler, getAllBlogsHandler, getBlogsByFilterHandler, getBlogsByIdHandler } = require("../../controllers/blogging.controller.js");
 
 const blogRouter = express.Router();
 
+blogRouter.get('/posts' , getBlogsByFilterHandler);
 
-blogRouter.get('/:id' , getBlogGyIdHandler);
+blogRouter.get('/:id' , getBlogsByIdHandler);
 
 blogRouter.get('' , getAllBlogsHandler);
 

@@ -1,5 +1,5 @@
 const validateRequestBody = require("../middlewares/validateCreateBlog.js");
-const { createBlogService, getBlogService, updateBlogService, deleteBlogService, getAllBlogsService } = require("../services/blogging.service.js");
+const { createBlogService, getBlogService, updateBlogService, deleteBlogService, getAllBlogsService, getBlogsByFilterService } = require("../services/blogging.service.js");
 
 async function createBlogHandler(req , res) {
 
@@ -20,8 +20,7 @@ async function createBlogHandler(req , res) {
     }
 }
 
-async function getBlogGyIdHandler(req , res) {
-    console.log(req.params);
+async function getBlogsByIdHandler(req , res) {
 
     const blog = await getBlogService(Number(req.params.id));
 
@@ -64,10 +63,22 @@ async function deleteBlogHandler(req , res) {
     })
 }
 
+async function getBlogsByFilterHandler(req , res) {
+
+    const blogs = await getBlogsByFilterService(req.query.term);
+
+    res.status(200).json({
+        message: "Blogs fetched successfully",
+        data : blogs,
+        success: true
+    });
+}
+
 module.exports = {
     createBlogHandler,
-    getBlogGyIdHandler,
+    getBlogsByIdHandler,
     getAllBlogsHandler,
     deleteBlogHandler,
     updateBlogHandler,
+    getBlogsByFilterHandler
 };

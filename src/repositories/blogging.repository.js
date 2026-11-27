@@ -1,4 +1,5 @@
 const Blog = require("../db/models/blog.js")
+const { Op } = require("sequelize");
 
 async function createBlog(blogData) {
     try {
@@ -114,10 +115,44 @@ async function deleteBlog(id) {
     }
 }
 
+async function getBlogsByFilter(filter) {
+    try {
+        const blogs = await Blog.findAll({
+            where: {
+                [Op.or]: [
+                    { title: { [Op.like]: `%${filter}%` }},
+                    { category: { [Op.like]: `%${filter}%` }},
+                    { content: { [Op.like]: `%${filter}%`}},
+                ],
+                [Op.and]: [
+                    {deletedAt : null}
+                ]
+            },
+        });
+
+        if(!blogs) {
+            throw new Error("NotFoundError");
+        }
+
+        const noOfBlogs = blogs.length;
+
+        for(let i = 0 ; i < noOfBlogs ; i++) {
+            const currentBlog = blogs[i];
+
+            currentBlog.tags = currentBlog.tags.tagNames;
+        }
+
+        return blogs;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 module.exports = {
     createBlog,
     getBlogById,
     getAllBlogs,
     updateBlog,
-    deleteBlog
+    deleteBlog,
+    getBlogsByFilter
 };
